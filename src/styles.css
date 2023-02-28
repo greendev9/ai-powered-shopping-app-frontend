@@ -1,0 +1,35 @@
+.App {
+  font-family: sans-serif;
+  padding: 16px;
+}
+
+.Crop-Controls {
+  margin-bottom: 10px;
+}
+.Crop-Controls > * {
+  margin-bottom: 3px;
+}
+
+img {
+  max-width: 100%;
+}
+.send-image-control {
+  display: flex;
+}
+
+.send-image-control > div {
+  padding: 10px;
+}
+input {
+  padding: 5px;
+}
+button {
+  padding: 5px;
+}
+.image-pannel {
+  /* width: 400px;
+  height: 400px; */
+  min-width: 200px;
+  min-height: 200px;
+  /* border: 1px solid; */
+}
