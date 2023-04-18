@@ -78,6 +78,13 @@ export default function App() {
       setCurrentStep(2)
       setImageIndex(0)
       setCrop(undefined) // Makes crop preview update between images.
+      setCrop({
+        "unit": "%",
+        "x": 15,
+        "y": 15,
+        "width": 70,
+        "height": 70
+      })
       const reader = new FileReader()
       reader.addEventListener('load', () => {
         // setImgSrc(reader.result?.toString() || ''),
@@ -210,28 +217,6 @@ export default function App() {
       });
   }
 
-  // useDebounceEffect(
-  //   async () => {
-  //     if (
-  //       completedCrop?.width &&
-  //       completedCrop?.height &&
-  //       imgRef.current &&
-  //       previewCanvasRef.current
-  //     ) {
-  //       // We use canvasPreview as it's much faster than imgPreview.
-  //       canvasPreview(
-  //         imgRef.current,
-  //         previewCanvasRef.current,
-  //         completedCrop,
-  //         scale,
-  //         rotate,
-  //       )
-  //     }
-  //   },
-  //   100,
-  //   [completedCrop, scale, rotate],
-  // )
-
   const theme = createTheme();
 
   return (
@@ -291,7 +276,7 @@ export default function App() {
             </Grid>
           }
           {currentStep != 1 &&
-            <Grid container>
+            <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <div>
                   <Backdrop
@@ -304,24 +289,29 @@ export default function App() {
               </Grid>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                 {currentStep == 2 &&
-                  <ReactCrop
-                    crop={crop}
-                    // onChange={(crop) => { setCrop(crop) }}
-                    // onComplete={(crop) => { console.log(crop); setCompletedCrop(crop) }}
-                    onChange={(_, percentCrop) => { setCrop(percentCrop) }}
-                    onComplete={(_, percentCrop) => { console.log('onComplete', percentCrop); setCompletedCrop(percentCrop) }}
-                  >
-                    <div style={{ display: 'flex' }}>
-                      <img
-                        ref={imgRef}
-                        alt="Crop me"
-                        // src={imgSrc}
-                        src={imageArray[imageIndex]}
-                        style={{ transform: `scale(${scale}) rotate(${rotate}deg)`, borderRadius: 20 }}
-                        onLoad={onImageLoad}
-                      />
-                    </div>
-                  </ReactCrop>
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <ReactCrop
+                      crop={crop}
+                      // onChange={(crop) => { setCrop(crop) }}
+                      // onComplete={(crop) => { console.log(crop); setCompletedCrop(crop) }}
+                      onChange={(_, percentCrop) => { setCrop(percentCrop) }}
+                      onComplete={(_, percentCrop) => { console.log('onComplete', percentCrop); setCompletedCrop(percentCrop) }}
+                    >
+                      <div style={{ display: 'flex' }}>
+                        <img
+                          ref={imgRef}
+                          alt="Crop me"
+                          src={imageArray[imageIndex]}
+                          style={{ 
+                            transform: `scale(${scale}) rotate(${rotate}deg)`, 
+                            borderRadius: 20, 
+                            imageOrientation: 'from-image',
+                          }}
+                          onLoad={onImageLoad}
+                        />
+                      </div>
+                    </ReactCrop>
+                  </Grid>
                 }
                 {currentStep == 3 &&
                   <Grid container spacing={1}>
@@ -355,9 +345,11 @@ export default function App() {
                             <div style={{ display: 'flex' }}>
                               <img
                                 alt="Result"
-                                // src={imgSrc}
                                 src={imageArray[imageIndex]}
-                                style={{ transform: `scale(${scale}) rotate(0deg)`, borderRadius: 20, imageOrientation: 'none' }}
+                                style={{ 
+                                  transform: `scale(${scale}) rotate(0deg)`, 
+                                  borderRadius: 20, imageOrientation: 'from-image',
+                                }}
                               />
                             </div>
                             <ButtonGroup
@@ -413,59 +405,4 @@ export default function App() {
       </Container>
     </ThemeProvider>
   )
-
-  // return (
-  //   <div className="App" style={{ display: 'grid', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-  //     <div>
-  //       <div className="gcse-search"></div>
-  //       {/* <MainComponent></MainComponent> */}
-  //       <div>
-  //         <ReactCrop
-  //           crop={crop}
-  //           onChange={(crop) => {setCrop(crop)}}
-  //           onComplete={(crop) => {console.log(crop); setCompletedCrop(crop)}}
-  //           // onChange={(_, percentCrop) => {console.log(percentCrop); setCrop(percentCrop)}}
-  //           // onComplete={(_, percentCrop) => {console.log(percentCrop); setCompletedCrop(percentCrop)}}
-  //         >
-  //           {!imgSrc ? <div className="image-pannel">
-  //             Please select an image. <br/>Image should be typically close up and clear.
-  //           </div> : <div className="image-pannel"><img
-  //             ref={imgRef}
-  //             alt="Crop me"
-  //             src={imgSrc}
-  //             style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
-  //             onLoad={onImageLoad}
-  //           /></div>}
-  //         </ReactCrop>
-
-  //         <div className="send-image-control">
-  //           <div className="Crop-Controls">
-  //             <input type="file" accept="image/*" onChange={onSelectFile} />
-  //           </div>
-  //           <div>
-  //             <input type="text" id="object-name" />
-  //           </div>
-  //           <div>
-  //             <button onClick={onSubmit}>Submit</button>
-  //           </div>
-  //         </div>
-  //       </div>
-  //       <div>
-  //         {!imgResultSrc ? <div className="image-pannel" style={{}}>
-  //           {imgResultSrc === false ? 'Please wait while processing...' : 'No result'}
-  //         </div> : <div className="" style={{}}><img
-  //           ref={imgRef}
-  //           alt="Result"
-  //           src={imgResultSrc}
-  //           style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
-  //           onLoad={onImageLoad}
-  //         /></div>}
-  //       </div>
-  //     </div>
-  //     <div>
-  //       <Button variant="outlined" style={{marginTop: 20}} onClick={() => { onGetImages() }}>Get Related Images</Button>
-  //       <TitlebarImageList itemData={itemData} ></TitlebarImageList>
-  //     </div>
-  //   </div>
-  // )
 }
